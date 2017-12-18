@@ -67,16 +67,14 @@ def basep(page):
     if ( request.method == 'POST'):
         if ( page == 'clients' ):
             data = request.form.to_dict(flat=False)
-            print(data)
             for i in range(0, len(data['hf'])):
-                print('client: %s, volume: %d' % (data['hf'][i], int(data['slider'][i])))
+                # print('client: %s, volume: %d' % (data['hf'][i], int(data['slider'][i])))
                 gg = snapserver.client(data['hf'][i]).set_volume(int(data['slider'][i]))
                 loop.run_until_complete(gg)
         if ( page == 'groups' ):
             data = request.form.to_dict(flat=False)
-            print(data)
             for i in range(0, len(data['hf'])):
-                print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
+                # print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
                 gg = snapserver.group(data['hf'][i]).set_stream(data['select'][i])
                 loop.run_until_complete(gg)
     # generate content
