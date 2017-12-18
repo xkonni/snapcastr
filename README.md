@@ -21,10 +21,31 @@
 * see status
 ![streams](https://github.com/xkonni/snapcastr/blob/master/doc/streams.png)
 
+## getting started
+
+### install
+```
+git clone https://github.com/xkonni/snapcastr
+cd snapcastr
+change server address in snapcastr.py
+pip install .
+```
+
+### run
+```
+export FLASK_APP=snapcastr
+export FLASK_DEBUG=true
+flask run --host=0.0.0.0 --port=5011
+```
+
+### use
+open localhost:5011 in browser
+
 ## dependencies
 * [python](https://www.python.org/)
 * [flask](http://flask.pocoo.org/)
 * [python-snapcast]( https://github.com/happyleavesaoc/python-snapcast)
+
 
 ## roadmap, in no particular order
 
