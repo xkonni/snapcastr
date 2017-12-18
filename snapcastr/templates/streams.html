@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class=sc>
+<h3>streams </h3>
+</div>
+<div class=sc>
+<table>
+  <tr>
+    <td><h4>name</h4></td>
+    <td><h4>status</h4></td>
+  </tr>
+  {% for stream in streams %}
+  <tr>
+    <td> {{ stream.identifier }}
+    </td>
+    <td>
+      {{ stream.status }}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "bootstrap/base.html" %}
+{% block title %} snapcastr {% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('.static', filename='style.css')}}">
+{% endblock %}
+
+{% block navbar %}
+{{ nav.top.render() }}
+{% endblock %}
+
+{% block content %}
+<div class=sc>
+<h3>status </h3>
+</div>
+<div class=sc>
+<table>
+  <tr>
+    <td> version </td>
+    <td> {{ version }} </td>
+  </tr><tr>
+    <td> clients </td>
+    <td> {{ num_clients }}
+ </td>
+  </tr><tr>
+    <td> groups </td>
+    <td> {{ num_groups }} </td>
+  </tr><tr>
+    <td> streams </td>
+    <td> {{ num_streams }} </td>
+  </tr>
+</table>
+</div>
+<div class=sc>
+{% endblock %}
+

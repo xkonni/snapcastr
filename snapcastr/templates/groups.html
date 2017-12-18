@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class=sc>
+<h3>groups </h3>
+</div>
+<form class="form form-inline" method="post" role="form">
+<div class=sc>
+<table>
+  <tr>
+    <td><h4>name</h4></td>
+    <td><h4>clients</h4></td>
+    <td><h4>stream</h4></td>
+  </tr>
+  {% for form in forms %}
+  <tr>
+    <td><div>{{ form.hf.data }} {{ form.hf }} </div></td>
+    <td>
+      {% for client in  form.clients %}
+        {{ client }} <br/>
+      {% endfor%}
+    </td>
+    <td> {{ form.select }} </td>
+  </tr>
+  {% endfor %}
+  <tr><td>
+      <p></p>
+      <input type=submit value=change class='btn-primary'>
+  </td></tr>
+</table>
+</form>
+</div>
+{% endblock %}

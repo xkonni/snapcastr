@@ -1,0 +1,1 @@
+from .snapcastr import app
