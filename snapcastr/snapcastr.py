@@ -30,6 +30,11 @@ topbar = Navbar('snapcastr',
 nav = Nav()
 nav.register_element('top', topbar)
 
+# create app
+app = Flask(__name__)
+nav.init_app(app)
+Bootstrap(app)
+
 # snapcast
 def run_test(loop):
   return (yield from snapcast.control.create_server(loop, server_addr, reconnect=True))
@@ -40,29 +45,18 @@ def start_server():
     snapserver = loop.run_until_complete(run_test(loop))
     return [loop, snapserver]
 
-# create app
-app = Flask(__name__)
-nav.init_app(app)
-Bootstrap(app)
-
 class volumeSliderForm(Form):
     hf = HiddenField()
     slider = IntegerRangeField(label='volume')
 
 class streamSelectForm(Form):
   hf = HiddenField()
+  name = TextField(label='name')
   clients = TextField(label='clients')
   select = SelectField(label='streams')
 
 @app.route('/')
 def base():
-    # loop, snapserver = start_server()
-    # version = snapserver.version
-    # num_clients = len(snapserver.clients)
-    # num_groups = len(snapserver.groups)
-    # num_streams = len(snapserver.streams)
-    # return render_template('base.html', version=version,num_clients=num_clients,
-    #         num_groups=num_groups, num_streams=num_streams)
     return redirect('/page/base')
 
 @app.route('/page/<string:page>', methods=['GET', 'POST'])
@@ -103,8 +97,12 @@ def basep(page):
                     for stream in snapserver.streams]
             form.select.default = group.stream
             form.process()
-            form.clients = group.clients
-            form.hf.data = group.identifier
+            if ( group.friendly_name ):
+                form.name.data = group.friendly_name
+            else:
+                form.name.data = group.identifier
+            form.clients   = group.clients
+            form.hf.data   = group.identifier
             forms.append(form)
         return render_template('groups.html', page=page, forms=forms)
     elif ( page == 'streams' ):

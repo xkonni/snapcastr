@@ -4,7 +4,7 @@
 <div class=sc>
 <h3>groups </h3>
 </div>
-<form class="form form-inline" method="post" role="form">
+<form class="form" method="post" role="form">
 <div class=sc>
 <table>
   <tr>
@@ -14,7 +14,10 @@
   </tr>
   {% for form in forms %}
   <tr>
-    <td><div>{{ form.hf.data }} {{ form.hf }} </div></td>
+    <td>
+      <div>{{ form.name.data }} </div>
+      <div>{{ form.hf }} </div>
+    </td>
     <td>
       {% for client in  form.clients %}
         {{ client }} <br/>
