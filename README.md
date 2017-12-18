@@ -31,7 +31,13 @@ change server address in snapcastr.py
 pip install .
 ```
 
-### run
+### run/debug
+to just run the application
+```
+snapcastrd --host=0.0.0.0 --port=5011
+```
+
+to debug it
 ```
 export FLASK_APP=snapcastr
 export FLASK_DEBUG=true
