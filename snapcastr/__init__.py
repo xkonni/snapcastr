@@ -1,1 +1,1 @@
-from .snapcastr import app
+from .snapcastr import app, start_server

@@ -13,7 +13,6 @@ import snapcast.control
 import asyncio
 
 # parameters
-server_addr='innocence'
 
 # create navigation bar
 topbar = Navbar('snapcastr',
@@ -37,13 +36,14 @@ Bootstrap(app)
 
 # snapcast
 def run_test(loop):
-  return (yield from snapcast.control.create_server(loop, server_addr, reconnect=True))
+  return (yield from snapcast.control.create_server(loop, start_server.addr, reconnect=True))
 
 def start_server():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     snapserver = loop.run_until_complete(run_test(loop))
     return [loop, snapserver]
+start_server.addr='localhost'
 
 class volumeSliderForm(Form):
     hf = HiddenField()

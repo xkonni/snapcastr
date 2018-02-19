@@ -4,8 +4,10 @@ import argparse
 import snapcastr
 
 parser = argparse.ArgumentParser(description='snapcastr')
-parser.add_argument('--host', metavar='host', type=str, default='localhost', help='specify the host, use 0.0.0.0 for external access')
+parser.add_argument('--bind', metavar='bind', type=str, default='localhost', help='specify the host to bind to, use 0.0.0.0 for external access')
 parser.add_argument('--port', metavar='port', type=int, default='5000', help='specify the listening port')
+parser.add_argument('--host', metavar='host', type=str, default='localhost', help='snapcast server host')
 args = parser.parse_args()
 
-snapcastr.app.run(host=args.host, port=args.port)
+snapcastr.start_server.addr = args.host
+snapcastr.app.run(host=args.bind, port=args.port)
