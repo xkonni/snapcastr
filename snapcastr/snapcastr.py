@@ -21,6 +21,7 @@ topbar = Navbar('snapcastr',
     View('Clients', 'basep', page='clients'),
     View('Groups', 'basep', page='groups'),
     View('Streams', 'basep', page='streams'),
+    View('Zones', 'basep', page='zones'),
     # Subgroup('Foo',
     #     View('Foo.Bar', 'bar', arg='val'),
     #     Separator(),
@@ -55,6 +56,10 @@ class streamSelectForm(Form):
   clients = TextField(label='clients')
   select = SelectField(label='streams')
 
+class assignForm(Form):
+  hf = HiddenField()
+  select = SelectField(label='streams')
+
 @app.route('/')
 def base():
     return redirect('/page/base')
@@ -76,6 +81,12 @@ def basep(page):
             for i in range(0, len(data['hf'])):
                 # print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
                 gg = snapserver.group(data['hf'][i]).set_stream(data['select'][i])
+                loop.run_until_complete(gg)
+        if ( page == 'zones' ):
+            data = request.form.to_dict(flat=False)
+            for i in range(0, len(data['hf'])):
+                # print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
+                gg = snapserver.group(data['select'][i]).add_client(data['hf'][i])
                 loop.run_until_complete(gg)
     # generate content
     if ( page == 'clients' ):
@@ -105,6 +116,17 @@ def basep(page):
         return render_template('groups.html', page=page, forms=forms)
     elif ( page == 'streams' ):
         return render_template('streams.html', page=page, streams=snapserver.streams)
+    elif ( page == 'zones' ):
+        forms = []
+        for client in snapserver.clients:
+            form = assignForm(csrf_enabled=False)
+            form.select.choices = [(group.identifier, group.friendly_name + " : " + group.identifier)
+                    for group in snapserver.groups]
+            form.select.default = client.group.identifier
+            form.process()
+            form.hf.data = client.identifier
+            forms.append(form)
+        return render_template('zones.html', page=page, forms=forms)
     else:
         loop, snapserver = start_server()
         version = snapserver.version
