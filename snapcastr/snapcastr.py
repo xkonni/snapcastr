@@ -80,7 +80,15 @@ def basep(page):
             data = request.form.to_dict(flat=False)
             for i in range(0, len(data['hf'])):
                 # print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
-                gg = snapserver.group(data['hf'][i]).set_stream(data['select'][i])
+                grp = snapserver.group(data['hf'][i])
+                gg = None
+                if data['select'][i]=='0':
+                    gg = grp.set_muted(True)
+                else:
+                    if grp.muted:
+                        gg = grp.set_muted(False)
+                        loop.run_until_complete(gg)
+                    gg = grp.set_stream(data['select'][i])
                 loop.run_until_complete(gg)
         if ( page == 'zones' ):
             data = request.form.to_dict(flat=False)
@@ -104,7 +112,8 @@ def basep(page):
             form = streamSelectForm(csrf_enabled=False)
             form.select.choices = [(stream.identifier, stream.identifier + " : " + stream.status)
                     for stream in snapserver.streams]
-            form.select.default = group.stream
+            form.select.choices.append(("0","Mute"))
+            form.select.default = "0" if group.muted else group.stream
             form.process()
             if ( group.friendly_name ):
                 form.name.data = group.friendly_name
