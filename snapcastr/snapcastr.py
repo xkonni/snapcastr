@@ -58,7 +58,7 @@ class streamSelectForm(Form):
 
 class assignForm(Form):
   hf = HiddenField()
-  select = SelectField(label='streams')
+  select = SelectField(label='groups')
 
 @app.route('/')
 def base():
@@ -93,7 +93,6 @@ def basep(page):
         if ( page == 'zones' ):
             data = request.form.to_dict(flat=False)
             for cid, gid in zip(data['hf'], data['select']):
-            for i in range(0, len(data['hf'])):
                 # print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
                 gg = snapserver.group(gid).add_client(cid)
                 loop.run_until_complete(gg)
