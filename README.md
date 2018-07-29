@@ -27,14 +27,13 @@
 ```
 git clone https://github.com/xkonni/snapcastr
 cd snapcastr
-change server address in snapcastr.py
 pip install .
 ```
 
 ### run/debug
 to just run the application
 ```
-snapcastrd --host=0.0.0.0 --port=5011
+snapcastrd --bind=0.0.0.0 --port=5011 --host=snapserver
 ```
 
 to debug it

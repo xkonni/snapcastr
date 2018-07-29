@@ -13,7 +13,6 @@ import snapcast.control
 import asyncio
 
 # parameters
-server_addr='innocence'
 
 # create navigation bar
 topbar = Navbar('snapcastr',
@@ -38,13 +37,14 @@ Bootstrap(app)
 
 # snapcast
 def run_test(loop):
-  return (yield from snapcast.control.create_server(loop, server_addr, reconnect=True))
+  return (yield from snapcast.control.create_server(loop, start_server.addr, reconnect=True))
 
 def start_server():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     snapserver = loop.run_until_complete(run_test(loop))
     return [loop, snapserver]
+start_server.addr='localhost'
 
 class volumeSliderForm(Form):
     hf = HiddenField()
@@ -70,31 +70,32 @@ def basep(page):
 
     # process POST data
     if ( request.method == 'POST'):
+        data = request.form.to_dict(flat=False)
         if ( page == 'clients' ):
-            data = request.form.to_dict(flat=False)
-            for i in range(0, len(data['hf'])):
-                # print('client: %s, volume: %d' % (data['hf'][i], int(data['slider'][i])))
-                gg = snapserver.client(data['hf'][i]).set_volume(int(data['slider'][i]))
+            for hf, slider in zip(data['hf'], data['slider']):
+                # print('client: %s, volume: %d' % (hf, int(slider)))
+                gg = snapserver.client(hf).set_volume(int(slider))
                 loop.run_until_complete(gg)
         if ( page == 'groups' ):
             data = request.form.to_dict(flat=False)
-            for i in range(0, len(data['hf'])):
+            for gid, sid in zip(data['hf'], data['select']):
                 # print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
-                grp = snapserver.group(data['hf'][i])
+                grp = snapserver.group(gid)
                 gg = None
-                if data['select'][i]=='0':
+                if sid=='0':
                     gg = grp.set_muted(True)
                 else:
                     if grp.muted:
                         gg = grp.set_muted(False)
                         loop.run_until_complete(gg)
-                    gg = grp.set_stream(data['select'][i])
+                    gg = grp.set_stream(sid)
                 loop.run_until_complete(gg)
         if ( page == 'zones' ):
             data = request.form.to_dict(flat=False)
+            for cid, gid in zip(data['hf'], data['select']):
             for i in range(0, len(data['hf'])):
                 # print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
-                gg = snapserver.group(data['select'][i]).add_client(data['hf'][i])
+                gg = snapserver.group(gid).add_client(cid)
                 loop.run_until_complete(gg)
     # generate content
     if ( page == 'clients' ):
