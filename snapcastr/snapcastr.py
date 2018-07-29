@@ -20,6 +20,7 @@ topbar = Navbar('snapcastr',
     View('Clients', 'basep', page='clients'),
     View('Groups', 'basep', page='groups'),
     View('Streams', 'basep', page='streams'),
+    View('Zones', 'basep', page='zones'),
     # Subgroup('Foo',
     #     View('Foo.Bar', 'bar', arg='val'),
     #     Separator(),
@@ -55,6 +56,10 @@ class streamSelectForm(Form):
   clients = TextField(label='clients')
   select = SelectField(label='streams')
 
+class assignForm(Form):
+  hf = HiddenField()
+  select = SelectField(label='streams')
+
 @app.route('/')
 def base():
     return redirect('/page/base')
@@ -72,9 +77,25 @@ def basep(page):
                 gg = snapserver.client(hf).set_volume(int(slider))
                 loop.run_until_complete(gg)
         if ( page == 'groups' ):
-            for hf, select in zip(data['hf'], data['select']):
-                # print('group: %s, stream: %s' % (hf, select))
-                gg = snapserver.group(hf).set_stream(select)
+            data = request.form.to_dict(flat=False)
+            for gid, sid in zip(data['hf'], data['select']):
+                # print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
+                grp = snapserver.group(gid)
+                gg = None
+                if sid=='0':
+                    gg = grp.set_muted(True)
+                else:
+                    if grp.muted:
+                        gg = grp.set_muted(False)
+                        loop.run_until_complete(gg)
+                    gg = grp.set_stream(sid)
+                loop.run_until_complete(gg)
+        if ( page == 'zones' ):
+            data = request.form.to_dict(flat=False)
+            for cid, gid in zip(data['hf'], data['select']):
+            for i in range(0, len(data['hf'])):
+                # print('group: %s, stream: %s' % (data['hf'][i], data['select'][i]))
+                gg = snapserver.group(gid).add_client(cid)
                 loop.run_until_complete(gg)
     # generate content
     if ( page == 'clients' ):
@@ -92,7 +113,8 @@ def basep(page):
             form = streamSelectForm(csrf_enabled=False)
             form.select.choices = [(stream.identifier, stream.identifier + " : " + stream.status)
                     for stream in snapserver.streams]
-            form.select.default = group.stream
+            form.select.choices.append(("0","Mute"))
+            form.select.default = "0" if group.muted else group.stream
             form.process()
             if ( group.friendly_name ):
                 form.name.data = group.friendly_name
@@ -104,6 +126,17 @@ def basep(page):
         return render_template('groups.html', page=page, forms=forms)
     elif ( page == 'streams' ):
         return render_template('streams.html', page=page, streams=snapserver.streams)
+    elif ( page == 'zones' ):
+        forms = []
+        for client in snapserver.clients:
+            form = assignForm(csrf_enabled=False)
+            form.select.choices = [(group.identifier, group.friendly_name + " : " + group.identifier)
+                    for group in snapserver.groups]
+            form.select.default = client.group.identifier
+            form.process()
+            form.hf.data = client.identifier
+            forms.append(form)
+        return render_template('zones.html', page=page, forms=forms)
     else:
         loop, snapserver = start_server()
         version = snapserver.version
