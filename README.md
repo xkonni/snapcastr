@@ -27,7 +27,7 @@
 ```
 git clone https://github.com/xkonni/snapcastr
 cd snapcastr
-pip install .
+pip3 install .
 ```
 
 ### run/debug
