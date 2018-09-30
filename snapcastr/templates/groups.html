@@ -20,7 +20,7 @@
     </td>
     <td>
       {% for client in  form.clients %}
-        {{ client }} <br/>
+        <p{% if not client.connected %} class="offline"{% endif %}>{{ client.id }}</p>
       {% endfor%}
     </td>
     <td> {{ form.select }} </td>

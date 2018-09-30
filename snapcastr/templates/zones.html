@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class=sc>
-<h3>clients </h3>
+<h3>Zones </h3>
 </div>
 <form class="form form-inline" method="post" role="form">
 <div class=sc>
@@ -13,7 +13,7 @@
   </tr>
   {% for form in forms %}
   <tr>
-    <td><div><br/> {{ form.hf.data }} {{ form.hf }} </div></td>
+    <td><div{% if not form.connected %} class="offline"{% endif %}><br/> {{ form.hf.data }} {{ form.hf }} </div></td>
     <td> {{ form.select }} </td>
   </tr>
   {% endfor %}

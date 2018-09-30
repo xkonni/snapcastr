@@ -104,6 +104,7 @@ def basep(page):
             form.slider.default = client.volume
             form.process()
             form.hf.data = client.identifier
+            form.connected = client.connected
             forms.append(form)
         return render_template('clients.html', page=page, forms=forms)
     elif ( page == 'groups' ):
@@ -119,7 +120,7 @@ def basep(page):
                 form.name.data = group.friendly_name
             else:
                 form.name.data = group.identifier
-            form.clients   = group.clients
+            form.clients   = group._group.get('clients')
             form.hf.data   = group.identifier
             forms.append(form)
         return render_template('groups.html', page=page, forms=forms)
@@ -134,6 +135,7 @@ def basep(page):
             form.select.default = client.group.identifier
             form.process()
             form.hf.data = client.identifier
+            form.connected = client.connected
             forms.append(form)
         return render_template('zones.html', page=page, forms=forms)
     else:
