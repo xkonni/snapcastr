@@ -48,6 +48,7 @@ start_server.addr='localhost'
 
 class volumeSliderForm(Form):
     hf = HiddenField()
+    name = TextField(label='name')
     slider = IntegerRangeField(label='volume')
 
 class streamSelectForm(Form):
@@ -58,6 +59,7 @@ class streamSelectForm(Form):
 
 class assignForm(Form):
   hf = HiddenField()
+  name = TextField(label='name')
   select = SelectField(label='groups')
 
 @app.route('/')
@@ -103,15 +105,25 @@ def basep(page):
             form = volumeSliderForm(csrf_enabled=False)
             form.slider.default = client.volume
             form.process()
-            form.hf.data = client.identifier
             forms.append(form)
+            if client.friendly_name:
+                form.name.data = client.friendly_name
+            else:
+                form.name.data = client.identifier
+            form.hf.data = client.identifier
         return render_template('clients.html', page=page, forms=forms)
     elif ( page == 'groups' ):
         forms = []
+        clients = {client.identifier: client for client in snapserver.clients}
         for group in snapserver.groups:
             form = streamSelectForm(csrf_enabled=False)
-            form.select.choices = [(stream.identifier, stream.identifier + " : " + stream.status)
-                    for stream in snapserver.streams]
+            form.select.choices = [
+                (
+                    stream.identifier,
+                    (stream.friendly_name if stream.friendly_name else stream.identifier) + " : " + stream.status
+                )
+                for stream in snapserver.streams
+            ]
             form.select.choices.append(("0","Mute"))
             form.select.default = "0" if group.muted else group.stream
             form.process()
@@ -119,7 +131,10 @@ def basep(page):
                 form.name.data = group.friendly_name
             else:
                 form.name.data = group.identifier
-            form.clients   = group.clients
+            form.clients   = [
+                client.friendly_name if client.friendly_name else client.identifier
+                for client in [clients[client] for client in group.clients]
+            ]
             form.hf.data   = group.identifier
             forms.append(form)
         return render_template('groups.html', page=page, forms=forms)
@@ -129,11 +144,20 @@ def basep(page):
         forms = []
         for client in snapserver.clients:
             form = assignForm(csrf_enabled=False)
-            form.select.choices = [(group.identifier, group.friendly_name + " : " + group.identifier)
-                    for group in snapserver.groups]
+            form.select.choices = [
+                (
+                    group.identifier,
+                    group.friendly_name if group.friendly_name else group.identifier
+                )
+                for group in snapserver.groups
+            ]
             form.select.default = client.group.identifier
             form.process()
             form.hf.data = client.identifier
+            if client.friendly_name:
+                form.name.data = client.friendly_name
+            else:
+                form.name.data = client.identifier
             forms.append(form)
         return render_template('zones.html', page=page, forms=forms)
     else:
