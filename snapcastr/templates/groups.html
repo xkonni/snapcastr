@@ -19,9 +19,11 @@
       <div>{{ form.hf }} </div>
     </td>
     <td>
+      <ul>
       {% for client in  form.clients %}
-        {{ client }} <br/>
+        <li>{{ client }}</li>
       {% endfor%}
+      </ul>
     </td>
     <td> {{ form.select }} </td>
   </tr>
