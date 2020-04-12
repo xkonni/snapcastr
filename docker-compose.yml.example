@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  snapcastr:
+    restart: unless-stopped
+    build: .
+    environment:
+      # change me!
+      - SNAPCAST_HOST=192.168.0.100
+    ports:
+      - 5011:5011
