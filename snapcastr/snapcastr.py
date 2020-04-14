@@ -36,7 +36,6 @@ class Snapcastr:
         self.port = port
         self.sc_host = sc_host
         self.loop = asyncio.get_event_loop()
-        self.snapserver = self.create_snapserver()
         self.app = self.create_app()
 
 
@@ -78,17 +77,18 @@ class Snapcastr:
 
         @app.route('/page/<string:page>', methods=['GET', 'POST'])
         def basep(page):
+            snapserver = self.create_snapserver()
             # process POST data
             if ( request.method == 'POST'):
                 data = request.form.to_dict(flat=False)
                 if ( page == 'clients' ):
                     for hf, slider in zip(data['hf'], data['slider']):
-                        gg = self.snapserver.client(hf).set_volume(int(slider))
+                        gg = snapserver.client(hf).set_volume(int(slider))
                         self.loop.run_until_complete(gg)
                 if ( page == 'groups' ):
                     data = request.form.to_dict(flat=False)
                     for gid, sid in zip(data['hf'], data['select']):
-                        grp = self.snapserver.group(gid)
+                        grp = snapserver.group(gid)
                         gg = None
                         if sid=='0':
                             gg = grp.set_muted(True)
@@ -101,13 +101,13 @@ class Snapcastr:
                 if ( page == 'zones' ):
                     data = request.form.to_dict(flat=False)
                     for cid, gid in zip(data['hf'], data['select']):
-                        gg = self.snapserver.group(gid).add_client(cid)
+                        gg = snapserver.group(gid).add_client(cid)
                         self.loop.run_until_complete(gg)
 
             # generate content
             if ( page == 'clients' ):
                 forms = []
-                for client in self.snapserver.clients:
+                for client in snapserver.clients:
                     form = volumeSliderForm(csrf_enabled=False)
                     form.slider.default = client.volume
                     form.process()
@@ -121,15 +121,15 @@ class Snapcastr:
                 return render_template('clients.html', page=page, forms=forms)
             elif ( page == 'groups' ):
                 forms = []
-                clients = {client.identifier: client for client in self.snapserver.clients}
-                for group in self.snapserver.groups:
+                clients = {client.identifier: client for client in snapserver.clients}
+                for group in snapserver.groups:
                     form = streamSelectForm(csrf_enabled=False)
                     form.select.choices = [
                             (
                                 stream.identifier,
                                 (stream.friendly_name if stream.friendly_name else stream.identifier) + " : " + stream.status
                                 )
-                            for stream in self.snapserver.streams
+                            for stream in snapserver.streams
                             ]
                     form.select.choices.append(("0","Mute"))
                     form.select.default = "0" if group.muted else group.stream
@@ -147,17 +147,17 @@ class Snapcastr:
                     forms.append(form)
                 return render_template('groups.html', page=page, forms=forms)
             elif ( page == 'streams' ):
-                return render_template('streams.html', page=page, streams=self.snapserver.streams)
+                return render_template('streams.html', page=page, streams=snapserver.streams)
             elif ( page == 'zones' ):
                 forms = []
-                for client in self.snapserver.clients:
+                for client in snapserver.clients:
                     form = assignForm(csrf_enabled=False)
                     form.select.choices = [
                             (
                                 group.identifier,
                                 group.friendly_name if group.friendly_name else group.identifier
                                 )
-                            for group in self.snapserver.groups
+                            for group in snapserver.groups
                             ]
                     form.select.default = client.group.identifier
                     form.process()
@@ -170,10 +170,10 @@ class Snapcastr:
                     forms.append(form)
                 return render_template('zones.html', page=page, forms=forms)
             else:
-                version = self.snapserver.version
-                num_clients = len(self.snapserver.clients)
-                num_groups = len(self.snapserver.groups)
-                num_streams = len(self.snapserver.streams)
+                version = snapserver.version
+                num_clients = len(snapserver.clients)
+                num_groups = len(snapserver.groups)
+                num_streams = len(snapserver.streams)
                 return render_template('base.html', version=version,num_clients=num_clients,
                         num_groups=num_groups, num_streams=num_streams)
 
