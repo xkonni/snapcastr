@@ -1,67 +1,115 @@
 # snapcastr
 
  Snapcastr is a webinterface to control a [snapcast](https://github.com/badaix/snapcast/) server.
- 
- It is written in python with flask, wtforms and python-snapcast (see [dependencies](https://github.com/xkonni/snapcastr#dependencies)).
+
+ It is written in python with flask, wtforms and python-snapcast
+
+- [python 3](https://www.python.org/)
+- [flask](http://flask.pocoo.org/)
+- [wtforms](https://wtforms.readthedocs.io)
+- [python-snapcast]( https://github.com/happyleavesaoc/python-snapcast)
 
 
 ## getting started
 
+### install requirements
+
+use your package manager, e.g. apt or pacman and install
+
+- python3
+- poetry
 
 ### install
 
+#### get source
+
+```bash
+$ git clone https://github.com/xkonni/snapcastr
 ```
 
-git clone https://github.com/xkonni/snapcastr
+#### install locally
 
-cd snapcastr
-
-pip install .
-
-```
-You may need to use `pip3 install .` to install properly to a Python 3 path.
-
-
-### run/debug
-#### run
-to just run the application
-
+```bash
+$ cd snapcastr
+$ poetry install
 ```
 
-snapcastrd --bind=0.0.0.0 --port=5011 --host=address_of_your_snapserver
+#### install system-wide
 
-```
-The `address_of_your_snapserver` might be 127.0.0.1 or localhost, if you are running snapcastr on the same machine as your snapserver. Snapcastr doesn't need to run with super user privileges (so you don't need to run it with `sudo`).
-
-#### debug
-to debug it
-
-```
-
-export FLASK_APP=snapcastr
-
-export FLASK_DEBUG=true
-
-flask run --host=0.0.0.0 --port=5011
-
+```bash
+$ cd snapcastr
+$ poetry build
+$ sudo pip3 install dist/snapcastr-0.1.0.tar.gz
 ```
 
 
+## run/debug
+### run
 
-### use
+show help
+
+```bash
+$ snapcastrd -h
+
+usage: snapcastrd [-h] [--host host] [--port port] [--sc_host sc_host] [-c CONFIG] [-d]
+
+snapcastr
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --host host           webinterface host
+  --port port, -p port  webinterface port
+  --sc_host sc_host, -s sc_host
+                        snapcast host
+  -c CONFIG, --config CONFIG
+                        config file
+  -d, --debug           debug mode
+
+
+```
+
+run the application
+
+- when installed locally
+
+```bash
+$ cd snapcastr
+$ poetry run snapcastrd --sc_host=address_of_your_snapserver
+```
+
+- when installed system-wide
+
+```bash
+$ snapcastrd --sc_host=address_of_your_snapserver
+```
+
+The `address_of_your_snapserver` might be 127.0.0.1 or localhost, if you are running
+snapcastr on the same machine as your snapserver. Snapcastr doesn't need to run with super
+user privileges (so you don't need to run it with `sudo`).
+
+Be aware that the last used configuration is saved in `$HOME/.config/snapcastr.json`.
+
+### debug
+
+to debug the application
+
+- when installed locally
+
+```bash
+$ cd snapcastr
+$ poetry run snapcastrd -d [other-options]
+```
+
+- when installed system-wide
+
+```bash
+$ snapcastrd -d [other-options]
+```
+
+
+## use
 
 Open http://localhost:5011 in your browser.
-
-
-
-## dependencies
-
-* [python 3](https://www.python.org/)
-
-* [flask](http://flask.pocoo.org/)
-
-* [python-snapcast]( https://github.com/happyleavesaoc/python-snapcast)
-
 
 
 ## features
