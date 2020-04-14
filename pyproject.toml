@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "snapcastr"
+version = "0.1.0"
+description = "webinterface to control a snapcast server"
+authors = ["xkonni <konstantin.koslowski@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+snapcast = "^2.1.0"
+Flask = "^1.1.2"
+flask-bootstrap = "^3.3.7"
+flask-nav = "^0.6"
+wtforms = "^2.2.1"
+xdg = "^4.0.1"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+snapcastrd = "snapcastr.snapcastrd:main"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

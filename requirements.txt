@@ -1,5 +1,0 @@
-Flask
-Flask-Bootstrap
-flask-nav
-snapcast
-WTForms
