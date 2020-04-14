@@ -111,12 +111,13 @@ class Snapcastr:
                     form = volumeSliderForm(csrf_enabled=False)
                     form.slider.default = client.volume
                     form.process()
-                    forms.append(form)
                     if client.friendly_name:
                         form.name.data = client.friendly_name
                     else:
                         form.name.data = client.identifier
                     form.hf.data = client.identifier
+                    form.connected = client.connected
+                    forms.append(form)
                 return render_template('clients.html', page=page, forms=forms)
             elif ( page == 'groups' ):
                 forms = []
@@ -138,8 +139,9 @@ class Snapcastr:
                     else:
                         form.name.data = group.identifier
                     form.clients   = [
-                            client.friendly_name if client.friendly_name else client.identifier
-                            for client in [clients[client] for client in group.clients]
+                            ( client.friendly_name if client.friendly_name else client.identifier,
+                              client.connected )
+                            for client in [clients[gclient] for gclient in group.clients]
                             ]
                     form.hf.data   = group.identifier
                     forms.append(form)
@@ -164,6 +166,7 @@ class Snapcastr:
                         form.name.data = client.friendly_name
                     else:
                         form.name.data = client.identifier
+                    form.connected = client.connected
                     forms.append(form)
                 return render_template('zones.html', page=page, forms=forms)
             else:

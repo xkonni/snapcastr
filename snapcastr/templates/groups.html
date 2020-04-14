@@ -21,7 +21,7 @@
     <td>
       <ul>
       {% for client in  form.clients %}
-        <li>{{ client }}</li>
+      <li><p{% if not client[1] %} class="offline"{% endif %}>{{ client[0] }}</p></li>
       {% endfor%}
       </ul>
     </td>

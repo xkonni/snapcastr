@@ -13,7 +13,7 @@
   </tr>
   {% for form in forms %}
   <tr>
-    <td><div>{{ form.name.data }} {{ form.hf }} </div></td>
+    <td><div{% if not form.connected %} class="offline"{% endif %}><br/> {{ form.name.data }} {{ form.hf }} </div></td>
     <td><div class=sc-slider> {{ form.slider }} </div></td>
   </tr>
   {% endfor %}
