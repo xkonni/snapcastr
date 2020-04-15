@@ -1,40 +1,44 @@
 # snapcastr
 
- Snapcastr is a webinterface to control a [snapcast](https://github.com/badaix/snapcast/) server.
+## introduction
 
- It is written in python with flask, wtforms and python-snapcast
+Snapcastr is a webinterface to control a [snapcast](https://github.com/badaix/snapcast/)
+server.
+
+It is written in python with flask, wtforms and python-snapcast
 
 - [python 3](https://www.python.org/)
 - [flask](http://flask.pocoo.org/)
 - [wtforms](https://wtforms.readthedocs.io)
 - [python-snapcast]( https://github.com/happyleavesaoc/python-snapcast)
 
+install from [source](https://github.com/xkonni/snapcastr#install-from-source) or from
+[pypi](https://github.com/xkonni/snapcastr#install-from-pypi)
 
-## getting started
 
-### install requirements
+## install from source
+
+### requirements
 
 use your package manager, e.g. apt or pacman and install
 
 - python3
 - poetry
 
-### install
-
-#### get source
+### get source
 
 ```bash
 $ git clone https://github.com/xkonni/snapcastr
 ```
 
-#### install locally
+### install locally
 
 ```bash
 $ cd snapcastr
 $ poetry install
 ```
 
-#### install system-wide
+### install system-wide
 
 ```bash
 $ cd snapcastr
@@ -43,10 +47,23 @@ $ sudo pip3 install dist/snapcastr-0.1.0.tar.gz
 ```
 
 
-## run/debug
-### run
+## install from pypi
 
-show help
+### install locally
+
+```bash
+$ pip install snapcastr
+```
+
+### install system-wide
+
+```bash
+$ sudo pip install snapcastr
+```
+
+## run
+
+### show help
 
 ```bash
 $ snapcastrd -h
@@ -64,11 +81,9 @@ optional arguments:
   -c CONFIG, --config CONFIG
                         config file
   -d, --debug           debug mode
-
-
 ```
 
-run the application
+### run the application
 
 - when installed locally
 
@@ -87,29 +102,15 @@ The `address_of_your_snapserver` might be 127.0.0.1 or localhost, if you are run
 snapcastr on the same machine as your snapserver. Snapcastr doesn't need to run with super
 user privileges (so you don't need to run it with `sudo`).
 
-Be aware that the last used configuration is saved in `$HOME/.config/snapcastr.json`.
-
-### debug
-
-to debug the application
-
-- when installed locally
-
-```bash
-$ cd snapcastr
-$ poetry run snapcastrd -d [other-options]
-```
-
-- when installed system-wide
-
-```bash
-$ snapcastrd -d [other-options]
-```
+### config
+The last used configuration is saved in `$HOME/.config/snapcastr.json` and can also be
+edited.
 
 
-## use
+## access webinterface
 
-Open http://localhost:5011 in your browser.
+When the application is running, open [http://localhost:5000](http://localhost:5000) in
+your browser.
 
 
 ## features
@@ -129,7 +130,6 @@ Open http://localhost:5011 in your browser.
 ### streams
 * View the status of the various streams available
 ![streams](https://github.com/xkonni/snapcastr/blob/master/doc/streams.png)
-
 
 
 ## roadmap, in no particular order

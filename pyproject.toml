@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "snapcastr"
-version = "0.2.0"
+version = "0.2.1"
 description = "webinterface to control a snapcast server"
 readme = "README.md"
 authors = ["xkonni <konstantin.koslowski@gmail.com>"]
