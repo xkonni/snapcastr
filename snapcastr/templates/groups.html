@@ -15,9 +15,8 @@
   {% for form in forms %}
   <tr>
     <td>
-      <div>{{ form.name.data }} </div>
-      <div>{{ form.hf }} </div>
-    </td>
+      <div>{{ form.name.data }} <br/> {{ form.ident.data }} {{ form.hf }} </div>
+    </td >
     <td>
       <ul>
       {% for client in  form.clients %}

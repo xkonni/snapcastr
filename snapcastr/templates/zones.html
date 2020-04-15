@@ -13,7 +13,9 @@
   </tr>
   {% for form in forms %}
   <tr>
-    <td><div{% if not form.connected %} class="offline"{% endif %}><br/> {{ form.name.data }} {{ form.hf }} </div></td>
+    <td><div{% if not form.connected %} class="offline"{% endif %}>
+        {{ form.name.data }} <br/> {{ form.ident.data }} {{ form.hf }}
+      </div></td>
     <td> {{ form.select }} </td>
   </tr>
   {% endfor %}
